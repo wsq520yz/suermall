@@ -8,12 +8,13 @@
 <script>
   import MainTabBar from "@/components/content/tabbar/MainTabBar";
   import {ref, defineComponent} from 'vue'
-
+  import Home from "@/views/Home/Home";
   export default {
     components: {
       // TabBar,
       // TabBarItem
-      MainTabBar
+      MainTabBar,
+      Home
     },
   }
 

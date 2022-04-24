@@ -23,7 +23,7 @@
     methods:{
       itemClick(){
         console.log('被单击了');
-        this.$router.push('/detail' + this.item.iid)
+        this.$router.push('/detail?id=' + this.item.iid)
       }
     }
 

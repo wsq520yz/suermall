@@ -1,7 +1,7 @@
 <template>
   <!--  <h2>首页</h2>-->
-    <div id="home" class="home">
-      <NavBar>
+    <div id="home" class="home" ref="Home">
+      <NavBar class="nav-bar">
         <template #center class="home-nav"><h2>购物街</h2></template>
       </NavBar>
       <home-swiper :banners="banners" @swiperImageLoad="imageLoad"></home-swiper>
@@ -155,6 +155,9 @@
 <style scoped lang="less">
   .home {
     padding-top: 44px;
+    .nav-bar{
+      background-color: var(--color-tint);
+    }
     .fixed{
       position: fixed;
       top: 44px;
