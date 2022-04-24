@@ -35,4 +35,5 @@ const nums2 = [111, 22, 333]
 //   totalNums.push(n)
 // }
 
-totalNums.push(...nums1)
+totalNums.push(...nums1);
+totalNums.push(...nums2);

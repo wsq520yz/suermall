@@ -10,26 +10,49 @@ import Cart from  '../views/cart/Cart'
 
 // @ts-ignore
 import Profile from '../views/profile/Profile'
+
+// @ts-ignore
+import Detail  from '../views/detail/Detail'
 const routes: Array<RouteRecordRaw> = [
   {
     path:'',
-    redirect:'/home'
+    redirect:'/home',
+    // meta:{
+    //   keepAlive:true
+    // }
   },
   {
     path: '/home',
-    component: Home
+    component: Home,
+    // meta:{
+    //   keepAlive:true
+    // }
   },
   {
     path:'/category',
-    component:Category
+    component:Category,
+    // meta:{
+    //   keepAlive:true
+    // }
   },
   {
     path:'/cart',
-    component:Cart
+    component:Cart,
+    // meta:{
+    //   keepAlive:true
+    // }
   },
   {
     path:'/profile',
-    component:Profile
+    component:Profile,
+    // meta:{
+    //   keepAlive:true
+    // }
+  },
+  {
+    path: '/detail',
+    name:'detail',
+    component:Detail,
   },
 
   // {
