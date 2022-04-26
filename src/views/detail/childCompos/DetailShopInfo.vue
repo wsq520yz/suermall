@@ -48,6 +48,8 @@
 
 <style scoped lang="less">
   .DetailShopInfo {
+    padding-bottom: 15px;
+    border-bottom: 3px  solid lightgray;
     .top {
       display: flex;
 

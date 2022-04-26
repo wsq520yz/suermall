@@ -5,6 +5,7 @@
     <DetailSwiper :banners="topImages"></DetailSwiper>
     <ItemInfo :itemInfo="itemInfo"></ItemInfo>
     <DetailShopInfo :shop="shop"></DetailShopInfo>
+    <DetailItemInfo :detailItemInfo="detailItemInfo"></DetailItemInfo>
     <!--  异步数据放到标签展示，不然渲染为空-->
     <!--  <p>-->
     <!--    {{goodsInfo}}-->
@@ -17,6 +18,8 @@
   import DetailSwiper from "@/views/detail/childCompos/DetailSwiper";
   import ItemInfo from "@/views/detail/childCompos/ItemInfo";
   import DetailShopInfo from "@/views/detail/childCompos/DetailShopInfo";
+  import DetailItemInfo from "@/views/detail/childCompos/DetailItemInfo";
+
   import {getDetail} from '@/network/detail'
 
   export default {
@@ -25,7 +28,8 @@
       DetialNavBar,
       DetailSwiper,
       DetailShopInfo,
-      ItemInfo
+      ItemInfo,
+      DetailItemInfo
     },
     data() {
       return {
@@ -33,7 +37,8 @@
         goodsInfo: {},
         topImages: [],
         shop: {},
-        itemInfo:{}
+        itemInfo:{},
+        detailItemInfo:{}
       }
     },
     created() {
@@ -52,6 +57,8 @@
         this.getShopInfo(res);
         //获取商品信息
         this.getItemInfo(res);
+        //获取详细信息
+        this.getDetailInfo(res);
       })
     },
     methods: {
@@ -87,9 +94,14 @@
         this.itemInfo.parcell = item.columns[2];
         this.itemInfo.rejectName= item.shopInfo.services[2].name;
         this.itemInfo.rejectIcon= item.shopInfo.services[2].icon;
-        this.itemInfo.sendPromiseName= item.shopInfo.services[3].name;
+        if(item.shopInfo.services[3].name)this.itemInfo.sendPromiseName = item.shopInfo.services[3].name;
         this.itemInfo.sendPromiseIcon= item.shopInfo.services[3].icon;
         console.log(this.itemInfo);
+      },
+      getDetailInfo(res){
+        const  detailInfo  = res.result.detailInfo;
+        this.detailItemInfo.desc = detailInfo.desc;
+        this.detailItemInfo.detailImage = detailInfo.detailImage;
       }
     }
   }
@@ -98,5 +110,9 @@
 <style scoped lang="less">
   .Detail {
     padding-top: 44px;
+    /*能盖住底部导航*/
+    position: relative;
+    z-index: 9;
+    background-color: #f5f5f5;
   }
 </style>

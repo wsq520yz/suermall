@@ -67,10 +67,14 @@
   }
 </script>
 
-<style scoped lang="less">
+<style lang="less">
   #DetailNavBar {
-    background-color: #fff;
-
+    .nav-bar{
+      /*设置组件样式穿到组件里面去才有效果*/
+      background-color: #fff;
+    }
+    position: relative;
+    z-index: 10;
     .left {
       img {
         display: block;

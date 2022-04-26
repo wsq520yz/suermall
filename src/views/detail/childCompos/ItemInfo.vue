@@ -47,8 +47,8 @@
 <style scoped lang="less">
 .ItemInfo{
   padding-top: 15px;
-  border-bottom:5px solid #f5f5f5;
-  padding-bottom: 25px;
+  padding-bottom: 15px;
+  border-bottom: 3px  solid lightgray;
   .desc{
       p{
         font-size: 1.1em;
