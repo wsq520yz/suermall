@@ -6,6 +6,8 @@
     <ItemInfo :itemInfo="itemInfo"></ItemInfo>
     <DetailShopInfo :shop="shop"></DetailShopInfo>
     <DetailItemInfo :detailItemInfo="detailItemInfo"></DetailItemInfo>
+<!--    这里是商品参数展示-->
+    <ItemParams :itemParams="itemParams"></ItemParams>
     <!--  异步数据放到标签展示，不然渲染为空-->
     <!--  <p>-->
     <!--    {{goodsInfo}}-->
@@ -19,7 +21,7 @@
   import ItemInfo from "@/views/detail/childCompos/ItemInfo";
   import DetailShopInfo from "@/views/detail/childCompos/DetailShopInfo";
   import DetailItemInfo from "@/views/detail/childCompos/DetailItemInfo";
-
+  import ItemParams from "@/views/detail/childCompos/ItemParams";
   import {getDetail} from '@/network/detail'
 
   export default {
@@ -29,7 +31,8 @@
       DetailSwiper,
       DetailShopInfo,
       ItemInfo,
-      DetailItemInfo
+      DetailItemInfo,
+      ItemParams
     },
     data() {
       return {
@@ -38,7 +41,8 @@
         topImages: [],
         shop: {},
         itemInfo:{},
-        detailItemInfo:{}
+        detailItemInfo:{},
+        itemParams:{}
       }
     },
     created() {
@@ -59,6 +63,8 @@
         this.getItemInfo(res);
         //获取详细信息
         this.getDetailInfo(res);
+        //获取参数信息
+        this.getItemParams(res);
       })
     },
     methods: {
@@ -102,6 +108,12 @@
         const  detailInfo  = res.result.detailInfo;
         this.detailItemInfo.desc = detailInfo.desc;
         this.detailItemInfo.detailImage = detailInfo.detailImage;
+      },
+      getItemParams(res){
+        this.itemParams.tables = res.result.itemParams.rule.tables;
+        this.itemParams.ruleKey = res.result.itemParams.rule.key;
+        this.itemParams.infoSet = res.result.itemParams.info.set;
+        this.itemParams.infoKey = res.result.itemParams.info.key;
       }
     }
   }
