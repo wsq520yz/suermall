@@ -9,7 +9,7 @@
     </div>
     <div class="detailImg" v-for="imgUrl in item.list">
       <div class="imgWrapper">
-        <img :src="imgUrl" alt="">
+        <img :src="imgUrl" alt="" @load="detailItemInfoImgLoad">
       </div>
     </div>
   </div>
@@ -25,6 +25,11 @@
           default(){
             return{}
           }
+        }
+      },
+      methods:{
+        detailItemInfoImgLoad(){
+          this.$emit('detailItemInfoImgLoad')
         }
       }
     }

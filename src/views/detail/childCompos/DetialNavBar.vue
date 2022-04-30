@@ -8,7 +8,7 @@
       </template>
       <template #center>
         <div class="center">
-          <div v-for="(item,index) in titles" @click="titleClick(index)" :class="{active:index == currentIndex}">
+          <div v-for="(item,index) in titles" @click="titleClick(index)" :class="{active:index == this.currentIndex}">
             {{item}}
           </div>
         </div>
@@ -32,33 +32,28 @@
       NavBar
     },
     props: {
-      goodsId: {
-        type: String,
-        default() {
-          return null
-        },
-        goodsInfo:{
-          type: Object,
+        currentIndex: {
+          type: Number,
           default() {
-            return{}
+            return 0
           }
         }
-      }
-    },
+      },
     data() {
       return {
         titles: ['商品', '参数', '评论', '推荐'],
-        currentIndex: 0,
+        // currentIndex: 0,
       }
     },
     mounted() {
-      console.log('nav'+this.goodsId);
+      console.log('nav' + this.goodsId);
       console.log(this.goodsInfo);
     },
     methods: {
       titleClick(index) {
-        // console.log(index);
-        this.currentIndex = index;
+        console.log(index);
+        // this.currentIndex = index;
+        this.$emit('navClick',index);
       },
       backClick() {
         this.$router.back()
@@ -69,12 +64,14 @@
 
 <style lang="less">
   #DetailNavBar {
-    .nav-bar{
+    .nav-bar {
       /*设置组件样式穿到组件里面去才有效果*/
       background-color: #fff;
     }
+
     position: relative;
     z-index: 10;
+
     .left {
       img {
         display: block;
