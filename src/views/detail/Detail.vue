@@ -1,8 +1,9 @@
 <template>
   <div class="Detail">
     <!--  <h2>这里是商品{{this.$route.query.id}}详情页面</h2>-->
-    <!--    这里是商品页面展示-->
+    <!--    这里是顶部导航栏-->
     <DetialNavBar :currentIndex="currentIndex" @navClick="navClick"></DetialNavBar>
+    <!--    这里是商品信息-->
     <DetailSwiper :banners="topImages"></DetailSwiper>
     <ItemInfo :itemInfo="itemInfo"></ItemInfo>
     <DetailShopInfo :shop="shop"></DetailShopInfo>
@@ -18,6 +19,8 @@
     <Rate :rate="rate" ref="Rate"></Rate>
     <!--    推荐商品信息展示-->
     <SkuInfo :skuInfo="skuInfo" @skuInfoImgLoad="skuInfoImgLoad" ref="SkuInfo"></SkuInfo>
+    <!--    底部导航栏-->
+    <DetailButtomBar @addCart="addCart"></DetailButtomBar>
   </div>
 </template>
 
@@ -30,8 +33,9 @@
   import ItemParams from "@/views/detail/childCompos/ItemParams";
   import Rate from "@/views/detail/childCompos/Rate";
   import SkuInfo from "@/views/detail/childCompos/SkuInfo";
-
+  import DetailButtomBar from "@/views/detail/childCompos/DetailButtomBar";
   import {getDetail} from '@/network/detail'
+
 
   export default {
     name: "Detail",
@@ -43,7 +47,8 @@
       DetailItemInfo,
       ItemParams,
       Rate,
-      SkuInfo
+      SkuInfo,
+      DetailButtomBar
     },
     data() {
       return {
@@ -123,6 +128,7 @@
         this.itemInfo.price = item.itemInfo.price;
         this.itemInfo.oldPrice = item.itemInfo.oldPrice;
         this.itemInfo.discountDesc = item.itemInfo.discountDesc;
+        this.itemInfo.desc = item.itemInfo.desc;
         this.itemInfo.sellCount = item.columns[0];
         this.itemInfo.collect = item.columns[1];
         this.itemInfo.parcell = item.columns[2];
@@ -169,13 +175,14 @@
        * 获取detailItemInfo,rate,skuinfo的offsetTop
        */
       skuInfoImgLoad() {
-        this.detailItemInfoOffsetTop = this.$refs.DetailItemInfo.$el.offsetTop;
-        console.log('detailItemInfoOffsetTop是:' + this.detailItemInfoOffsetTop);
-        this.itemParamsOffsetTop = this.$refs.ItemParams.$el.offsetTop;
+        //-60让点击切换对的位置更准
+        this.detailItemInfoOffsetTop = this.$refs.DetailItemInfo.$el.offsetTop - 60;
+        // console.log('detailItemInfoOffsetTop是:' + this.detailItemInfoOffsetTop);
+        this.itemParamsOffsetTop = this.$refs.ItemParams.$el.offsetTop - 60;
         // console.log('itemParamsOffsetTop是:'+this.itemParamsOffsetTop);
-        this.rateOffsetTop = this.$refs.Rate.$el.offsetTop;
-        console.log('rateOffsetTop是:' + this.rateOffsetTop);
-        this.skuInfoOffsetTop = this.$refs.SkuInfo.$el.offsetTop;
+        this.rateOffsetTop = this.$refs.Rate.$el.offsetTop - 60;
+        // console.log('rateOffsetTop是:' + this.rateOffsetTop);
+        this.skuInfoOffsetTop = this.$refs.SkuInfo.$el.offsetTop - 60;
         // console.log('skuInfoOffsetTop是:'+this.skuInfoOffsetTop);
       },
       /**
@@ -187,7 +194,7 @@
           let flag = 0;
           // console.log(scrollTop);
           //修正scrolltop，更圆滑
-          scrollTop = scrollTop + 44;
+          scrollTop = scrollTop + 70;
           if (0 <= scrollTop && scrollTop <= this.detailItemInfoOffsetTop) flag = 0;
           if (this.detailItemInfoOffsetTop < scrollTop && scrollTop <= this.rateOffsetTop) flag = 1;
           if (this.rateOffsetTop < scrollTop && scrollTop <= this.skuInfoOffsetTop) flag = 2;
@@ -201,7 +208,7 @@
           // } else {
           //   this.currentIndex = 4
           // }
-          console.log(flag);
+          // console.log(flag);
           this.currentIndex = flag;
         })
       },
@@ -226,6 +233,20 @@
           document.documentElement.scrollTop = this.skuInfoOffsetTop;
           document.body.scrollTop = this.skuInfoOffsetTop;
         }
+      },
+      /**
+       * 获取单击加入购物车事件
+       */
+      addCart(){
+        // console.log('点击了添加到购物车');
+        const product = {};
+        product.images = this.topImages[0];
+        product.title = this.itemInfo.title;
+        product.desc = this.itemInfo.desc;
+        product.price  = this.itemInfo.price;
+        // console.log(product);
+        product.iid = this.id;
+        this.$store.dispatch('addCart',product)
       }
     }
   }
@@ -234,6 +255,7 @@
 <style scoped lang="less">
   .Detail {
     padding-top: 44px;
+    padding-bottom: 2.15rem;
     /*能盖住底部导航*/
     position: relative;
     z-index: 9;
