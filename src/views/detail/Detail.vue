@@ -246,6 +246,7 @@
         product.price  = this.itemInfo.price;
         // console.log(product);
         product.iid = this.id;
+        product.isChecked = true;
         this.$store.dispatch('addCart',product)
       }
     }
