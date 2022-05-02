@@ -4,10 +4,10 @@
     <!--    这里是顶部导航栏-->
     <DetialNavBar :currentIndex="currentIndex" @navClick="navClick"></DetialNavBar>
     <!--    这里是商品信息-->
-    <DetailSwiper :banners="topImages"></DetailSwiper>
+    <DetailSwiper :banners="topImages" @swiperImageLoad="imgLoad"></DetailSwiper>
     <ItemInfo :itemInfo="itemInfo"></ItemInfo>
     <DetailShopInfo :shop="shop"></DetailShopInfo>
-    <DetailItemInfo :detailItemInfo="detailItemInfo" @detailItemInfoImgLoad="detailItemInfoImgLoad"
+    <DetailItemInfo :detailItemInfo="detailItemInfo" @detailItemInfoImgLoad="imgLoad"
                     ref="DetailItemInfo"></DetailItemInfo>
     <!--    这里是商品参数展示-->
     <ItemParams :itemParams="itemParams" ref="ItemParams"></ItemParams>
@@ -18,9 +18,11 @@
     <!--    这里是商品评论展示-->
     <Rate :rate="rate" ref="Rate"></Rate>
     <!--    推荐商品信息展示-->
-    <SkuInfo :skuInfo="skuInfo" @skuInfoImgLoad="skuInfoImgLoad" ref="SkuInfo"></SkuInfo>
+    <SkuInfo :skuInfo="skuInfo" @skuInfoImgLoad="imgLoad" ref="SkuInfo"></SkuInfo>
     <!--    底部导航栏-->
     <DetailButtomBar @addCart="addCart"></DetailButtomBar>
+<!--    吐丝-->
+    <Toast :show="isShow" :message="message" ></Toast>
   </div>
 </template>
 
@@ -34,6 +36,8 @@
   import Rate from "@/views/detail/childCompos/Rate";
   import SkuInfo from "@/views/detail/childCompos/SkuInfo";
   import DetailButtomBar from "@/views/detail/childCompos/DetailButtomBar";
+  import Toast from "@/components/common/toast/Toast";
+
   import {getDetail} from '@/network/detail'
 
 
@@ -48,7 +52,8 @@
       ItemParams,
       Rate,
       SkuInfo,
-      DetailButtomBar
+      DetailButtomBar,
+      Toast
     },
     data() {
       return {
@@ -65,7 +70,9 @@
         itemParamsOffsetTop: null,
         rateOffsetTop: null,
         skuInfoOffsetTop: null,
-        currentIndex: null
+        currentIndex: null,
+        isShow :false,
+        message:'商品已经添加到购物车啦'
       }
     },
     created() {
@@ -172,17 +179,17 @@
         this.skuInfo = res.result.skuInfo.skus
       },
       /**
-       * 获取detailItemInfo,rate,skuinfo的offsetTop
+       * 获取偏移的offset
        */
-      skuInfoImgLoad() {
+      imgLoad() {
         //-60让点击切换对的位置更准
-        this.detailItemInfoOffsetTop = this.$refs.DetailItemInfo.$el.offsetTop - 60;
+        this.detailItemInfoOffsetTop = this.$refs.DetailItemInfo.$el.offsetTop;
         // console.log('detailItemInfoOffsetTop是:' + this.detailItemInfoOffsetTop);
-        this.itemParamsOffsetTop = this.$refs.ItemParams.$el.offsetTop - 60;
+        this.itemParamsOffsetTop = this.$refs.ItemParams.$el.offsetTop;
         // console.log('itemParamsOffsetTop是:'+this.itemParamsOffsetTop);
-        this.rateOffsetTop = this.$refs.Rate.$el.offsetTop - 60;
+        this.rateOffsetTop = this.$refs.Rate.$el.offsetTop;
         // console.log('rateOffsetTop是:' + this.rateOffsetTop);
-        this.skuInfoOffsetTop = this.$refs.SkuInfo.$el.offsetTop - 60;
+        this.skuInfoOffsetTop = this.$refs.SkuInfo.$el.offsetTop;
         // console.log('skuInfoOffsetTop是:'+this.skuInfoOffsetTop);
       },
       /**
@@ -195,8 +202,8 @@
           // console.log(scrollTop);
           //修正scrolltop，更圆滑
           scrollTop = scrollTop + 70;
-          if (0 <= scrollTop && scrollTop <= this.detailItemInfoOffsetTop) flag = 0;
-          if (this.detailItemInfoOffsetTop < scrollTop && scrollTop <= this.rateOffsetTop) flag = 1;
+          if (0 <= scrollTop && scrollTop <= this.itemParamsOffsetTop) flag = 0;
+          if (this.itemParamsOffsetTop < scrollTop && scrollTop <= this.rateOffsetTop) flag = 1;
           if (this.rateOffsetTop < scrollTop && scrollTop <= this.skuInfoOffsetTop) flag = 2;
           if (this.skuInfoOffsetTop < scrollTop) flag = 3;
           // if (0 <= scrollTop <= this.detailItemInfoOffsetTop) {
@@ -222,8 +229,8 @@
           document.body.scrollTop = 0;
         }
         if (index == 1) {
-          document.documentElement.scrollTop = this.detailItemInfoOffsetTop;
-          document.body.scrollTop = this.detailItemInfoOffsetTop;
+          document.documentElement.scrollTop = this.itemParamsOffsetTop;
+          document.body.scrollTop = this.itemParamsOffsetTop;
         }
         if (index == 2) {
           document.documentElement.scrollTop = this.rateOffsetTop;
@@ -247,7 +254,18 @@
         // console.log(product);
         product.iid = this.id;
         product.isChecked = true;
-        this.$store.dispatch('addCart',product)
+        this.$store.dispatch('addCart',product);
+        this.toast(this,'isShow')
+        // this.isShow = true
+      },
+      /**
+       *调用toast方法
+       */
+      toast:(_this,variable)=>{
+        _this[variable] = true;
+        setTimeout(()=>{
+          _this[variable] = false
+        },1000)
       }
     }
   }

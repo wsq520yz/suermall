@@ -42,6 +42,7 @@
 <style scoped lang="less">
 .CartList{
   padding-top: 1.5rem;
+  padding-bottom: 5rem;
   .cartListItem{
     display: flex;
     padding-bottom: 1.15rem;

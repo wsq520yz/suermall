@@ -5,7 +5,7 @@
     </div>
     <div class="sku_item" v-for="item in skuInfo">
       <div class="imgWrapper">
-        <img :src="item.img" alt="" @load="skuInfoImgLoad">
+        <img v-lazy="item.img" alt="" @load="skuInfoImgLoad">
       </div>
       <div class="itemInfo">
 <!--        <span class="currency">{{item.currency}}</span>-->
