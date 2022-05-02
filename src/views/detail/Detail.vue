@@ -232,16 +232,16 @@
           document.body.scrollTop = 0;
         }
         if (index == 1) {
-          document.documentElement.scrollTop = this.itemParamsOffsetTop;
-          document.body.scrollTop = this.itemParamsOffsetTop;
+          document.documentElement.scrollTop = this.itemParamsOffsetTop + 5;
+          document.body.scrollTop = this.itemParamsOffsetTop  + 5;
         }
         if (index == 2) {
-          document.documentElement.scrollTop = this.rateOffsetTop;
-          document.body.scrollTop = this.rateOffsetTop;
+          document.documentElement.scrollTop = this.rateOffsetTop  + 5;
+          document.body.scrollTop = this.rateOffsetTop  + 5;
         }
         if (index == 3) {
-          document.documentElement.scrollTop = this.skuInfoOffsetTop;
-          document.body.scrollTop = this.skuInfoOffsetTop;
+          document.documentElement.scrollTop = this.skuInfoOffsetTop  + 5;
+          document.body.scrollTop = this.skuInfoOffsetTop  + 5;
         }
       },
       /**
