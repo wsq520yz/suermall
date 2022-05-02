@@ -2,6 +2,7 @@
     <div class="Rate">
       <div class="head">
         <span>商品评论</span>
+        <span class="right">更多</span>
       </div>
       <div class="rateItem" v-for="item in rate.list">
         <div class="user">
@@ -25,10 +26,6 @@
            </div>
           </div>
         </div>
-        <div class="upRate">
-          <input type="text" value="你的评论.....">
-          <button>提交</button>
-        </div>
       </div>
     </div>
 </template>
@@ -51,11 +48,18 @@
 
 <style scoped lang="less">
  .Rate{
+   padding: 0.15rem;
    margin-top: 5px;
    background-color: #fff;
+   padding-bottom: 1rem;
+   border-bottom: 3px solid #E1E1E1;
    .head{
      padding-top: 8px;
      padding-left: 15px;
+     .right{
+       float: right;
+       margin-right: 15px;
+     }
    }
    .rateItem{
      .user{

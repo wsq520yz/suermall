@@ -1,6 +1,6 @@
 <template>
   <div class="GoodList">
-    <GoodsListItem v-for="item in  goods" :item="item"></GoodsListItem>
+    <GoodsListItem v-for="item in  goods" :item="item" :goodItemImgLoad="goodItemImgLoad"></GoodsListItem>
   </div>
 </template>
 
@@ -17,6 +17,11 @@
         default() {
           return []
         }
+      }
+    },
+    methods:{
+      goodItemImgLoad(){
+        this.$emit('goodItemImgLoad')
       }
     }
   }

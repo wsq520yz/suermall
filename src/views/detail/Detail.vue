@@ -11,18 +11,16 @@
                     ref="DetailItemInfo"></DetailItemInfo>
     <!--    这里是商品参数展示-->
     <ItemParams :itemParams="itemParams" ref="ItemParams"></ItemParams>
-    <!--  异步数据放到标签展示，不然渲染为空-->
-    <!--  <p>-->
-    <!--    {{goodsInfo}}-->
-    <!--  </p>-->
     <!--    这里是商品评论展示-->
     <Rate :rate="rate" ref="Rate"></Rate>
     <!--    推荐商品信息展示-->
-    <SkuInfo :skuInfo="skuInfo" @skuInfoImgLoad="imgLoad" ref="SkuInfo"></SkuInfo>
+    <!--    skuinfo自己写的暂时不用-->
+    <!--    <SkuInfo :skuInfo="skuInfo" @skuInfoImgLoad="imgLoad" ref="SkuInfo"></SkuInfo>-->
+    <DetailRecommend :recommendInfo="recommendInfo" :goodItemImgLoad="imgLoad"  ref="SkuInfo"></DetailRecommend>
     <!--    底部导航栏-->
     <DetailButtomBar @addCart="addCart"></DetailButtomBar>
-<!--    吐丝-->
-    <Toast :show="isShow" :message="message" ></Toast>
+    <!--    吐丝-->
+    <Toast :show="isShow" :message="message"></Toast>
   </div>
 </template>
 
@@ -35,10 +33,11 @@
   import ItemParams from "@/views/detail/childCompos/ItemParams";
   import Rate from "@/views/detail/childCompos/Rate";
   import SkuInfo from "@/views/detail/childCompos/SkuInfo";
+  import DetailRecommend from "@/views/detail/childCompos/DetailRecommend";
   import DetailButtomBar from "@/views/detail/childCompos/DetailButtomBar";
   import Toast from "@/components/common/toast/Toast";
 
-  import {getDetail} from '@/network/detail'
+  import {getDetail, getRecommend} from '@/network/detail'
 
 
   export default {
@@ -51,7 +50,8 @@
       DetailItemInfo,
       ItemParams,
       Rate,
-      SkuInfo,
+      // SkuInfo,
+      DetailRecommend,
       DetailButtomBar,
       Toast
     },
@@ -66,13 +66,14 @@
         itemParams: {},
         rate: {},
         skuInfo: [],
+        recommendInfo: [],
         detailItemInfoOffsetTop: null,
         itemParamsOffsetTop: null,
         rateOffsetTop: null,
         skuInfoOffsetTop: null,
         currentIndex: null,
-        isShow :false,
-        message:'商品已经添加到购物车啦'
+        isShow: false,
+        message: '商品已经添加到购物车啦'
       }
     },
     created() {
@@ -101,6 +102,21 @@
         this.getSkuInfo(res);
         //挂载顶部导航切换效果
         this.detailNavBarListener()
+      });
+      getRecommend().then(res => {
+        // this.recommendInfo = res.data.list;
+
+        for (let i = 0; i < res.data.list.length; i++) {
+          let obj = {};
+          // obj.title = res.data.list[i].title;
+          res.data.list[i].price = res.data.list[i].itemSale;
+          res.data.list[i].show = {};
+          // obj.cfav = res.data.list[i].cfav;
+          res.data.list[i].show.img = res.data.list[i].image;
+          // console.log('每个对象是'+obj);
+          // this.recommendInfo.push(obj);
+        }
+        this.recommendInfo = res.data.list;
       })
     },
     methods: {
@@ -199,23 +215,10 @@
         window.addEventListener('scroll', () => {
           let scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
           let flag = 0;
-          // console.log(scrollTop);
-          //修正scrolltop，更圆滑
-          scrollTop = scrollTop + 70;
           if (0 <= scrollTop && scrollTop <= this.itemParamsOffsetTop) flag = 0;
           if (this.itemParamsOffsetTop < scrollTop && scrollTop <= this.rateOffsetTop) flag = 1;
           if (this.rateOffsetTop < scrollTop && scrollTop <= this.skuInfoOffsetTop) flag = 2;
           if (this.skuInfoOffsetTop < scrollTop) flag = 3;
-          // if (0 <= scrollTop <= this.detailItemInfoOffsetTop) {
-          //   this.currentIndex = 0
-          // } else if (this.detailItemInfoOffsetTop < scrollTop <= this.rateOffsetTop) {
-          //   this.currentIndex = 1
-          // } else if (this.rateOffsetTop < scrollTop <= this.skuInfoOffsetTop) {
-          //   this.currentIndex = 3
-          // } else {
-          //   this.currentIndex = 4
-          // }
-          // console.log(flag);
           this.currentIndex = flag;
         })
       },
@@ -244,28 +247,28 @@
       /**
        * 获取单击加入购物车事件
        */
-      addCart(){
+      addCart() {
         // console.log('点击了添加到购物车');
         const product = {};
         product.images = this.topImages[0];
         product.title = this.itemInfo.title;
         product.desc = this.itemInfo.desc;
-        product.price  = this.itemInfo.price;
+        product.price = this.itemInfo.price;
         // console.log(product);
         product.iid = this.id;
         product.isChecked = true;
-        this.$store.dispatch('addCart',product);
-        this.toast(this,'isShow')
+        this.$store.dispatch('addCart', product);
+        this.toast(this, 'isShow')
         // this.isShow = true
       },
       /**
        *调用toast方法
        */
-      toast:(_this,variable)=>{
+      toast: (_this, variable) => {
         _this[variable] = true;
-        setTimeout(()=>{
+        setTimeout(() => {
           _this[variable] = false
-        },1000)
+        }, 1000)
       }
     }
   }
@@ -275,6 +278,7 @@
   .Detail {
     padding-top: 44px;
     padding-bottom: 2.15rem;
+    background-color: #fff;
     /*能盖住底部导航*/
     position: relative;
     z-index: 9;

@@ -1,6 +1,6 @@
 <template>
   <div class="GoodsListItem" @click="itemClick">
-    <img v-lazy="item.show.img" alt="" >
+    <img v-lazy="item.show.img" alt="" @load="goodItemImgLoad">
     <div>
       <p>{{item.title}}</p>
       <span class="price">{{item.price}}</span>
@@ -24,6 +24,9 @@
       itemClick(){
         console.log('被单击了');
         this.$router.push('/detail?id=' + this.item.iid)
+      },
+      goodItemImgLoad(){
+        this.$emit('goodItemImgLoad')
       }
     }
 
