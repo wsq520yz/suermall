@@ -1,44 +1,74 @@
 <template>
-  <InfiniteList :data="data1" :width="'100%'" :height="500" :itemSize="50" :debug="debug" v-slot="{ item, index }">
-    <div class="li-con">{{ index + 1 }} : {{ item }}</div>
-  </InfiniteList>
+  <div class="Category">
+    <NavBar>
+      <template #center><h2>商品分类</h2></template>
+    </NavBar>
+    <CategoryNav :categoryList="categoryList" @navChange="navChange"></CategoryNav>
+    <CategoryNavDetail :maitKey="maitKey"></CategoryNavDetail>
+  </div>
 </template>
 
 <script>
-  import InfiniteList from 'vue3-infinite-list';
-    export default {
-        name: "Category",
-      components:{
-          InfiniteList
-      },
-      data(){
-        return{
-          scroll:null,
-          data1:[]
+  import CategoryNav from "@/views/Category/childComps/CategoryNav";
+  import CategoryNavDetail from "@/views/Category/childComps/CategoryNavDetail";
+  import NavBar from "@/components/common/navbar/NavBar";
+  import {getCategory} from "@/network/category";
+
+  export default {
+    name: "Category",
+    components: {
+      CategoryNav,
+      CategoryNavDetail,
+      NavBar
+    },
+    data() {
+      return {
+        categoryList:[],
+        currentIndex:0
+      }
+    },
+    computed:{
+      maitKey(){
+        if (!this.categoryList.length){
+          return "3627"
         }
+        return this.categoryList[this.currentIndex].maitKey
+      }
+    },
+    created() {
+      this.getCategoryNav()
+    },
+    mounted() {
+
+    },
+    methods: {
+      getCategoryNav() {
+        getCategory().then(res => {
+          this.categoryList = [...res.data.category.list];
+          this.categoryList.forEach((el, index) => {
+            if (index == 0) {
+              el.isActive = true;
+            } else {
+              el.isActive = false;
+            }
+          })
+        })
       },
-      created() {
-          for (let i = 0 ; i < 100 ; i++){
-            this.data1.push(i)
-          }
-      },
-      mounted() {
-        // console.log(document.querySelector('.wrapper'));
-        // this.scroll = new BScroll(this.$refs.wrapper, {})
-      },
+      navChange(index){
+        this.currentIndex = index
+      }
     }
+  }
 </script>
 
 <style  lang="less">
-.wrapper{
-  ul{
-    height: 150px;
-    background-color: #666666;
-    color: white;
-    overflow: hidden;
-    /*会自动隐藏*/
-    /*overflow-y:scroll;*/
+  .Category {
+    width: 100vw;
+    display: flex;
+    margin-top: 44px;
+    .nav-bar{
+      background-color: var(--color-tint);
+      color: #fff;
+    }
   }
-
-}
 </style>
